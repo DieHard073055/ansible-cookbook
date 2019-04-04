@@ -1,0 +1,19 @@
+---
+- hosts: localhost
+  tasks:
+    - name: include the user department list
+      include_vars: ./userlist
+      
+    - name: generate a iterable template file to create users and groups
+      template:
+        src: ./user_groups.j2
+        dest: ./user_groups.yml
+    
+    - name: include the generated user groups list
+      include_vars: ./user_groups.yml
+    
+    - name: print out the list of users
+      debug:
+        msg: "user: {{item['name']}}, group: {{item['group']}}"
+      with_items: 
+        - "{{user_groups}}"

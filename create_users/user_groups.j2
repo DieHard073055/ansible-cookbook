@@ -1,0 +1,7 @@
+user_groups:
+{% for department in departments %}
+{% for user in hostvars[inventory_hostname][department] %}
+  - name: {{ user }}
+    group: {{ department }}
+{% endfor %}
+{% endfor %}

@@ -1,0 +1,23 @@
+user_groups:
+  - name: joe
+    group: students
+  - name: john
+    group: students
+  - name: smith
+    group: students
+  - name: frank
+    group: students
+  - name: henry
+    group: staff
+  - name: owen
+    group: staff
+  - name: brock
+    group: staff
+  - name: pheona
+    group: staff
+  - name: jenna
+    group: faculty
+  - name: dean
+    group: faculty
+  - name: wong
+    group: faculty

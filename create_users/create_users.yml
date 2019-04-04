@@ -1,0 +1,60 @@
+---
+- hosts: localhost
+  vars:
+    users: []
+    user_department: []
+    user_department_length: []
+    users_with_items:
+      - name: "alice"
+        personal_directories:
+          - "bob"
+          - "carol"
+          - "dan"
+      - name: "bob"
+        personal_directories:
+          - "alice"
+          - "carol"
+          - "dan"
+    common_directories:
+      - ".ssh"
+      - "loops"
+      
+  tasks:
+    - name: read the users list
+      include_vars: ./userlist
+  
+    - name: show the departments
+      debug:
+        msg: "{{ hostvars[inventory_hostname][departments[item|int]] | length }}"
+      loop: "{{ range(0, departments | length) | list }}"
+      loop_control:
+        index_var: index
+    
+    - name: show the departments
+      set_fact:
+        user_department_length: "{{user_department_length}} + [{{ hostvars[inventory_hostname][departments[item|int]] | length }}]"
+      loop: "{{ range(0, departments | length) | list }}"
+      
+    - name: append all the users to a list
+      set_fact: 
+        users: "{{users}} + {{hostvars[inventory_hostname][departments[item|int]] | list}}"
+        user_department: "{{user_department + [departments[item|int]]}}"
+      loop: "{{ range(0, departments | length) | list }}"
+    
+    - name: show the users
+      debug:
+        msg: "{{users[item]}}"
+      loop: "{{range(0, users | length) | list}}"
+    
+    - name: "Loop 2: create common users' directories using 'with_nested'."
+      debug:
+        msg: "{{ users_with_items[0][item[0]] }}"
+      with_nested:
+        - "{{ users_with_items }}"
+    
+    - name: "Loop 3: create personal users' directories using 'with_subelements'."
+      debug:
+        msg: "/home/{{ item.0.name }}/{{ item.1 }}"
+      with_subelements:
+        - "{{ users_with_items }}"
+        - personal_directories   

@@ -1,0 +1,22 @@
+---
+- hosts: localhost
+  vars:
+    users: []
+  tasks:
+  - name: include users list
+    include_vars: ./userlist
+    
+  - name: set group and users
+    set_fact:
+      users: |
+        {% set userlist = [] -%}
+        {% for department in departments -%}
+          {% for user in hostvars[inventory_hostname][department] -%}
+            {% set ignored = userlist.extend([{'group':department, 'username': user}]) -%}
+          {%- endfor %}
+        {%- endfor %}
+        {{ userlist }}
+
+  - name:
+    debug:
+      msg: "{{users}}"

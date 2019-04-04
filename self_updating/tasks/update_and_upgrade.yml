@@ -1,0 +1,11 @@
+---
+- name: make sure python3-apt is installed
+  command: "apt-get install python3-apt python-apt-common -y"
+    
+- name: update pkg cache and upgrade (debian)
+  apt:
+    autoclean: yes
+    autoremove: yes
+    update_cache: yes
+    upgrade: yes
+    

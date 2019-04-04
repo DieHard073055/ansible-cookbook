@@ -1,0 +1,16 @@
+- name: Configure Users and Groups
+  debug:
+    msg: "loading users from {{user_file}}"
+
+- name: Loading users from the user_file
+  include_vars: "{{user_file}}"
+
+- name: Creating groups
+  debug:
+    msg: "create {{item}}" 
+  loop: "{{user_groups}}"
+    
+- name: Creating Users
+  debug:
+    msg: "create user {{item['name']}}, add to group {{item['group']}}"
+  loop: "{{users}}"
