@@ -1,0 +1,21 @@
+---
+- hosts: localhost
+  tasks:
+    - name: load the list of users and departments
+      include_vars: ./userlist
+    
+    - name: create the dictionary to iterate through the users dynamically
+      set_fact:
+        users: |
+          {% set userslist = [] -%}
+          {% for department in departments -%}
+            {% for user in hostvars[inventory_hostname][department] -%}
+              {% set ignored = userslist.extend([{'username' : user, 'group': department}]) -%}
+            {%- endfor %}
+          {%- endfor %}
+          {{userslist}}
+    
+    - name: show the userlist dictionary
+      debug: 
+        msg: "{{item['username']}}"
+      with_items: "{{ users }}"

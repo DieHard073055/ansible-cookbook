@@ -1,0 +1,22 @@
+---
+departments:
+    - students
+    - staff
+    - faculty
+    
+students:
+    - joe
+    - john
+    - smith
+    - frank
+
+staff:
+    - henry
+    - owen
+    - brock
+    - pheona
+
+faculty:
+    - jenna
+    - dean
+    - wong

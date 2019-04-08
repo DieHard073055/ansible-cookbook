@@ -1,0 +1,28 @@
+- hosts: 127.0.0.1
+  vars:
+    war_files:
+      server1:
+      - file1.war
+      - file2.war
+      server2:
+      - file1.war
+      - file2.war
+      - file3.war
+  tasks:
+  - set_fact:
+      war_files_list_of_dicts: |
+          {% set res = [] -%}
+          {% for key in war_files.keys() -%}
+             {% for value in war_files[key] -%}
+              {% set ignored = res.extend([{'Server': key, 'WAR':value}]) -%}
+             {%- endfor %}
+          {%- endfor %}
+          {{ res }}
+
+  - name: let's debug the crap out of this
+    debug: var=war_files_list_of_dicts
+
+  - name: Servers and their WARs!!!
+    debug:
+       msg: "Server={{ item.Server }}, WAR={{ item.WAR }}"
+    with_items: "{{ war_files_list_of_dicts }}"

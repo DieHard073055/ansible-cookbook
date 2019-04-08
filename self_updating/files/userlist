@@ -1,0 +1,24 @@
+user_groups:
+  - staff
+  
+users:
+  - name: george
+    group: staff
+   
+  - name: john
+    group: staff
+   
+  - name: william
+    group: staff
+   
+  - name: sandy
+    group: staff
+   
+  - name: david
+    group: staff
+   
+  - name: bill
+    group: staff
+   
+  - name: frank
+    group: staff

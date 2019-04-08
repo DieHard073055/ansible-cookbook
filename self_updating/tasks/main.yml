@@ -1,0 +1,8 @@
+---
+# tasks/main
+- name: create users
+  import_tasks: create_users.yml
+
+- name: update package cache and upgrade the system
+  import_tasks: update_and_upgrade.yml
+  become: yes
