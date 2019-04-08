@@ -1,0 +1,8 @@
+---
+- hosts: wordpress
+  tasks:
+    - name: install & configure wordpress
+      include_role:
+          name: wordpress
+
+

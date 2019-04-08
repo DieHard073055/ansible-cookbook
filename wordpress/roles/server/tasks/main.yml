@@ -1,0 +1,22 @@
+---
+# tasks file for server
+- name: update yum cache
+  yum:
+    update_cache: yes
+  become: yes
+
+- name: Installing apache server
+  yum:
+    name:
+      - epel-release
+      - httpd
+    state: latest
+  become: yes
+
+- name: enabling and starting apache server
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+  become: yes
+

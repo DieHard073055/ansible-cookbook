@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  vars:
+    fruits: ['Apple', 'Banana', 'Carrot', 'Donuts']
+  tasks:
+    - name: write the list of important fruits to the fruits template
+      template:
+        src: ./fruits.j2
+        dest: ./fruits.txt
+

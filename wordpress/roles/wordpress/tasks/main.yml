@@ -1,0 +1,56 @@
+---
+# tasks file for worpress
+- name: download the latest wordpress
+  get_url:
+    url: https://wordpress.org/latest.tar.gz
+    dest: "{{wordpress_tar}}"
+
+- name: create directory for wordpress
+  file:
+    path: "{{wordpress_dir}}"
+    state: directory
+    group: apache
+    owner: apache
+  become: yes
+
+- name: extract the contents
+  unarchive:
+    src: "{{wordpress_tar}}"
+    dest: "{{wordpress_extract_dir}}"
+    remote_src: yes
+    owner: apache
+    group: apache
+    mode: 0755
+  become: yes
+
+- name: change document root to wordpress
+  lineinfile:
+    path: /etc/httpd/conf/httpd.conf
+    regexp: "(.)DocumentRoot \"/var/www/html\""
+    line: "DocumentRoot \"{{wordpress_dir}}\""
+  notify:
+    - restart httpd
+  become: yes
+
+- name: copy sample config file
+  copy:
+    src: "{{wordpress_dir}}/wp-config-sample.php"
+    dest: "{{wordpress_dir}}/wp-config.php"
+    owner: apache
+    group: apache
+    mode: 0755
+    remote_src: yes
+  become: yes
+
+- name: update config file
+  lineinfile:
+    dest: "{{wordpress_dir}}/wp-config.php"
+    regexp: "{{item.regexp}}"
+    line: "{{item.line}}"
+  with_items:
+    - { "regexp":"^.*define\\((\\s|\\S)'DB_NAME',.*", "line":"define ('DB_NAME', '{{wp_database}}');" }
+    - { "regexp":"^.*define\\((\\s|\\S)'DB_USER',.*", "line":"define ('DB_USER', '{{wp_database_user}}');" }
+    - { "regexp":"^.*define\\((\\s|\\S)'DB_PASSWORD',.*", "line":"define ('DB_PASSWORD', '{{wp_database_password}}');" }
+  become: yes
+  no_log: yes
+

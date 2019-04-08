@@ -1,0 +1,5 @@
+---
+# vars file for worpress
+wordpress_tar: /tmp/wordpress.tar.gz
+wordpress_extract_dir: /var/www/
+wordpress_dir: /var/www/wordpress

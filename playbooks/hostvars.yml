@@ -1,0 +1,20 @@
+---
+- hosts: all
+  gather_facts: True
+
+- hosts: localhost
+  tasks:
+
+    - name: print all the hostnames
+      debug:
+        msg: "{{groups['labservers']}}"
+
+    - name: print the hostname, distribution and ip address of all the hosts
+      debug:
+          #msg: "{{item}} - {{hostvars[item]['ansible_distribution']}}:{{hostvars[item]}} : {{hostvars[item]['ansible_eth0']['macaddress']}}"
+          msg: "{{hostvars[item]['ansible_hostname']}} - {{hostvars[item]['ansible_distribution']}} - {{hostvars[item]['ansible_eth0']['ipv4']['address']}} - {{hostvars[item]['ansible_default_ipv4']['macaddress']}}"
+      with_items: "{{groups['labservers']}}"
+
+      # - name: print everything
+      #   debug:
+      #     msg: "{{hostvars}}"

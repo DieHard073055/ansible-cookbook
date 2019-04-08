@@ -1,0 +1,14 @@
+---
+- hosts: labserver1
+  tasks:
+    - name: make sure ufw firewall service is up
+      service:
+        name: ufw
+        state: started
+      become: yes
+
+    - name: make sure ufw firewall will be started when rebooting
+      service:
+        name: ufw
+        enabled: yes
+      become: yes

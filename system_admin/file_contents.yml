@@ -1,0 +1,12 @@
+---
+- hosts: labserver1
+  vars:
+    - file_location: /home/eshan/dev/ansible/system_admin/file1
+    - contents: "{{ lookup('file', file_location)}}"
+    - destination: ~/readme.txt
+  tasks:
+    - name: write the content read from the control node on to the target host
+      copy:
+        content: "{{contents}}"
+        dest: destination
+

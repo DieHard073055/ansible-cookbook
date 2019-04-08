@@ -1,0 +1,2 @@
+[webservers]
+wordpress ansible_host=eshanshafeeq0730551c.mylabserver.com ansible_ssh_common_args='-o StrictHostKeyChecking=no'

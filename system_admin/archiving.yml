@@ -1,0 +1,46 @@
+---
+- hosts: localhost
+  vars:
+    num_recipes: 4
+    file_name: []
+  tasks:
+    - name: create a directory for the recipes
+      tempfile:
+        state: directory
+        suffix: recipe
+      register: recipe_dir
+
+    - name: create a directory for the recipe backup
+      tempfile:
+        state: directory
+        suffix: recipe
+      register: recipe_backup_dir
+
+    - name: get random recipes
+      uri:
+        url: http://taco-randomizer.herokuapp.com/random/
+      register: random_taco
+      with_sequence: count={{ num_recipes }}
+
+    - name: set file names based off of the recipe
+      set_fact:
+          file_name: "{{ file_name + [(recipe_dir['path'] + '/' + (random_taco['results'][item|int]['json']['base_layer']['name'] + ' with ' + random_taco['results'][item|int]['json']['mixin']['name'] + '.recipe') | regex_replace('\\s', '-')) ]}}"
+      with_sequence: start=0 end={{ ( random_taco['results'] | length ) - 1}}
+
+    - name: show recipe file locations
+      debug:
+          msg: "{{file_name[item|int]}}"
+      with_sequence: start=0 end={{ ( random_taco['results'] | length - 1 ) }}
+
+    - name: write the contents of the recepies to their files
+      copy:
+        dest: "{{file_name[item|int]}}"
+        content: "{{( random_taco['results'][item|int]['json']['base_layer']['recipe'] + '\n' + random_taco['results'][item|int]['json']['mixin']['recipe'])}}"
+      with_sequence: start=0 end={{ ( random_taco['results'] | length - 1 ) }}
+
+    - name: create a backup of the recipes we have collected
+      archive:
+        path: "{{ recipe_dir['path'] }}"
+        dest: "{{ recipe_backup_dir['path'] }}/recipe_backup.tgz"
+
+

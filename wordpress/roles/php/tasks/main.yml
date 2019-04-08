@@ -1,0 +1,12 @@
+---
+# tasks file for php
+
+- name: installing php
+  yum:
+    name:
+      - php-mysql
+      - php
+  become: yes
+  notify:
+    - restart httpd
+

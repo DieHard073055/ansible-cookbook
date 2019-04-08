@@ -1,0 +1,17 @@
+---
+- hosts: labserver1
+  vars:
+   open_ports:
+     - ssh
+     - 443
+     - 80
+  tasks:
+   - name: enable the firewall rules and reload ufw
+     ufw:
+       rule: allow
+       port: "{{item}}"
+       state: reloaded
+     with_items:
+       - "{{open_ports}}"
+     become: yes
+
