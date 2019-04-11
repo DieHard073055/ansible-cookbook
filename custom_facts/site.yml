@@ -1,0 +1,25 @@
+---
+- hosts: localhost
+  gather_facts: no
+  tasks:
+  - name: make sure the custom facts directory exists
+    file:
+      path: /etc/ansible/facts.d
+      state: directory
+    become: yes
+    
+  - name: write the custom facts file
+    template:
+      src: system_current_time.j2
+      dest: /etc/ansible/facts.d/system_current_time.fact
+      mode: 0755
+    become: yes
+      
+  - name: get the custom fact
+    setup:
+      gather_subset:
+        - facter
+        
+  - name: show all the facts
+    debug:
+      msg: "{{hostvars[inventory_hostname]['ansible_facts']['ansible_local']}}"
